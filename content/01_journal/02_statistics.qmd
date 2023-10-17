@@ -2,6 +2,47 @@
 title: "Statistical Concepts"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+#Assingment
+```{r}
+random_vars <- readRDS("data/random_vars.rds")
+
+View(random_vars)
+
+mean_var1 <- mean(random_vars$age)
+variance_var1 <- var(random_vars$age)
+std_var1 <- sd(random_vars$age)
+
+mean_var2 <- mean(random_vars$income)
+variance_var2 <- var(random_vars$income)
+std_var2 <- sd(random_vars$income)
+
+##
+mean_var1
+variance_var1
+std_var1
+mean_var2
+variance_var2
+std_var2
+##
+
+covariance <- cov(random_vars$age, random_vars$income)
+correlation <- cor(random_vars$age, random_vars$income)
+
+##
+covariance
+correlation
+##
+
+df_sub18 <- subset(random_vars, age >= 18)
+df_sub18_65 <- subset(random_vars, age >= 18 & age <= 65)
+df_sub65 <- subset(random_vars, age <= 65)
+
+mean_df_sub18 <- mean(df_sub18$income)
+mean_df_sub18_65 <- mean(df_sub18_65$income)
+mean_df_sub65 <- mean(df_sub65$income)
+
+mean_df_sub18
+mean_df_sub18_65
+mean_df_sub65
+
+```
