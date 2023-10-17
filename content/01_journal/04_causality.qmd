@@ -2,6 +2,23 @@
 title: "Causality"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+##Assignment
+```{r}
+library(ggplot2)
+library(dplyr)
+month <- c(1:12)
+ice_cream_consumption <- c(50, 48, 40, 35, 30, 25, 15, 12, 25, 35, 48, 55)
+drownings <- c(10, 15, 20, 25, 30, 40, 55, 60, 45, 35, 22, 15)
+
+df1 <- data.frame(month, ice_cream_consumption)
+df2 <- data.frame(month, drownings)
+
+
+ggplot() +
+  geom_line(data = df1, aes(x = month, y = ice_cream_consumption, color = "Ice Cream Consumption"), linetype = "solid") +
+  geom_line(data = df2, aes(x = month, y = drownings, color = "Number of Drownings"), linetype = "dashed") +
+  scale_y_continuous(name = "Ice Cream Consumption", sec.axis = sec_axis(~., name = "Number of Drownings")) +
+  scale_color_manual(values = c("Ice Cream Consumption" = "blue", "Number of Drownings" = "red")) +
+  labs(x = "Month") +
+  ggtitle("Two Line Plots: Ice Cream and Drowning")
+```

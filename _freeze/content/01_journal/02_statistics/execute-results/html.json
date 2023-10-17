@@ -1,0 +1,18 @@
+{
+  "hash": "d7ee1b5b80fc14aa3363825604f9f29d",
+  "result": {
+    "markdown": "---\ntitle: \"Statistical Concepts\"\n---\n\n\n#Assingment\n\n::: {.cell hash='02_statistics_cache/html/unnamed-chunk-1_cacd4818cb8ca05aefd6ac7dce839397'}\n\n```{.r .cell-code}\nrandom_vars <- readRDS(\"data/random_vars.rds\")\n\nView(random_vars)\n\nmean_var1 <- mean(random_vars$age)\nvariance_var1 <- var(random_vars$age)\nstd_var1 <- sd(random_vars$age)\n\nmean_var2 <- mean(random_vars$income)\nvariance_var2 <- var(random_vars$income)\nstd_var2 <- sd(random_vars$income)\n\n##\nmean_var1\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n#> [1] 33.471\n```\n:::\n\n```{.r .cell-code}\nvariance_var1\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n#> [1] 340.6078\n```\n:::\n\n```{.r .cell-code}\nstd_var1\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n#> [1] 18.45556\n```\n:::\n\n```{.r .cell-code}\nmean_var2\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n#> [1] 3510.731\n```\n:::\n\n```{.r .cell-code}\nvariance_var2\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n#> [1] 8625646\n```\n:::\n\n```{.r .cell-code}\nstd_var2\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n#> [1] 2936.945\n```\n:::\n\n```{.r .cell-code}\n##\n\ncovariance <- cov(random_vars$age, random_vars$income)\ncorrelation <- cor(random_vars$age, random_vars$income)\n\n##\ncovariance\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n#> [1] 29700.15\n```\n:::\n\n```{.r .cell-code}\ncorrelation\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n#> [1] 0.5479432\n```\n:::\n\n```{.r .cell-code}\n##\n\ndf_sub18 <- subset(random_vars, age >= 18)\ndf_sub18_65 <- subset(random_vars, age >= 18 & age <= 65)\ndf_sub65 <- subset(random_vars, age <= 65)\n\nmean_df_sub18 <- mean(df_sub18$income)\nmean_df_sub18_65 <- mean(df_sub18_65$income)\nmean_df_sub65 <- mean(df_sub65$income)\n\nmean_df_sub18\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n#> [1] 4464.027\n```\n:::\n\n```{.r .cell-code}\nmean_df_sub18_65\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n#> [1] 4691.378\n```\n:::\n\n```{.r .cell-code}\nmean_df_sub65\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n#> [1] 3625.972\n```\n:::\n:::",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-in-header": [
+        "<link href=\"../../site_libs/pagedtable-1.1/css/pagedtable.css\" rel=\"stylesheet\" />\r\n<script src=\"../../site_libs/pagedtable-1.1/js/pagedtable.js\"></script>\r\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -2,6 +2,44 @@
 title: "Regression and Statistical Inference"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+#Assingment Chapter 3
+
+##Dimensions of dataframe
+```{r}
+df <- readRDS("data/car_prices.rds")
+dim(df)
+View(df)
+```
+The dimensions are 181 x 22
+
+##Data types of Dataframe
+```{r}
+summary(df)
+str(df)
+```
+Numbers are defined as num and strings als chr.
+
+##Linear regression
+```{r}
+LG <- lm(price ~., data = df)
+summary(LG)
+```
+
+If the coefficient estimate is negative that means that if the value of the variable increases the price of the car decreases. If the coefficient is positive the price increases if the variable is increased. 
+
+The p-value indicates the significance of the variable if the p-value is very small e.g. enginetypeohcv< 0.001 that means that the variable is highly statically significant. The smaller the p-value the higher the statistical significance.
+
+##Linear regression 2
+Regressor is enginelocationrear
+
+The datatype is a string. It can have either the value front or rear.
+The coefficient estimate is positive that means that cars having a rear engine location tend to have higher prices than cars that have a front engine. The p-value is less than 0.05 therefore indicating that it is statisically significant
+
+##Add variable
+```{r}
+mut_df <- df %>% mutate(seat_heating = TRUE)
+model <- lm(price ~ ., data = mut_df)
+summary(model)
+```
+
+The output for some reason shows NA which I dont understand. I would expect the p-value to be 0 resulting to the seat heating having an extremely low significance on the price. Which makes sense when you consider that all cars in the dataframe use it. 
