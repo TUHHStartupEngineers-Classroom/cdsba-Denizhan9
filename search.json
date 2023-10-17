@@ -14,20 +14,6 @@
     "text": "How to use\n\nAccept the assignment and get your own github repo.\nBlog/journal what you are doing in R, by editing the .qmd files.\nSee the links page for lots of helpful links on learning R.\nChange everything to make it your own.\nMake sure to render you website every time before you want to upload changes."
   },
   {
-    "objectID": "content/01_journal/02_statistics.html",
-    "href": "content/01_journal/02_statistics.html",
-    "title": "Statistical Concepts",
-    "section": "",
-    "text": "Note\n\n\n\nYou can delete everything in here and start fresh."
-  },
-  {
-    "objectID": "content/01_journal/04_causality.html",
-    "href": "content/01_journal/04_causality.html",
-    "title": "Causality",
-    "section": "",
-    "text": "Note\n\n\n\nYou can delete everything in here and start fresh."
-  },
-  {
     "objectID": "content/01_journal/09_iv.html",
     "href": "content/01_journal/09_iv.html",
     "title": "Instrumental Variables",
@@ -49,16 +35,9 @@
     "text": "Note\n\n\n\nYou can delete everything in here and start fresh."
   },
   {
-    "objectID": "content/01_journal/06_rct.html",
-    "href": "content/01_journal/06_rct.html",
-    "title": "Randomized Controlled Trials",
-    "section": "",
-    "text": "Note\n\n\n\nYou can delete everything in here and start fresh."
-  },
-  {
-    "objectID": "content/01_journal/08_did.html",
-    "href": "content/01_journal/08_did.html",
-    "title": "Difference-in-Differences",
+    "objectID": "content/01_journal/03_regression.html",
+    "href": "content/01_journal/03_regression.html",
+    "title": "Regression and Statistical Inference",
     "section": "",
     "text": "Note\n\n\n\nYou can delete everything in here and start fresh."
   },
@@ -73,13 +52,34 @@
     "objectID": "content/01_journal/01_probability.html#header-2",
     "href": "content/01_journal/01_probability.html#header-2",
     "title": "Probability Theory",
-    "section": "\n2.1 Header 2",
-    "text": "2.1 Header 2\nHeader 3\nHeader 4\nHeader 5\nHeader 6"
+    "section": "1.1 Header 2",
+    "text": "1.1 Header 2\n\nHeader 3\n\nHeader 4\n\nHeader 5\n\nHeader 6"
   },
   {
-    "objectID": "content/01_journal/03_regression.html",
-    "href": "content/01_journal/03_regression.html",
-    "title": "Regression and Statistical Inference",
+    "objectID": "content/01_journal/02_statistics.html",
+    "href": "content/01_journal/02_statistics.html",
+    "title": "Statistical Concepts",
+    "section": "",
+    "text": "Note\n\n\n\nYou can delete everything in here and start fresh."
+  },
+  {
+    "objectID": "content/01_journal/04_causality.html",
+    "href": "content/01_journal/04_causality.html",
+    "title": "Causality",
+    "section": "",
+    "text": "Note\n\n\n\nYou can delete everything in here and start fresh."
+  },
+  {
+    "objectID": "content/01_journal/06_rct.html",
+    "href": "content/01_journal/06_rct.html",
+    "title": "Randomized Controlled Trials",
+    "section": "",
+    "text": "Note\n\n\n\nYou can delete everything in here and start fresh."
+  },
+  {
+    "objectID": "content/01_journal/08_did.html",
+    "href": "content/01_journal/08_did.html",
+    "title": "Difference-in-Differences",
     "section": "",
     "text": "Note\n\n\n\nYou can delete everything in here and start fresh."
   },
