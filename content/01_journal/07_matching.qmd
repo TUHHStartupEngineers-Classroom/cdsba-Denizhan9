@@ -2,6 +2,42 @@
 title: "Matching and Subclassification"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+```{r}
+# Load necessary libraries
+# Load necessary libraries
+library(Matching)
+
+# Load your data
+data <- readRDS("C:\\Users\\Deniz\\Documents\\GitHub\\Causal_Data_Science_Data\\membership.rds")
+
+
+# Compute a Naive Estimate of Average Treatment Effect
+naive_ate <- with(data, mean(avg_purch[card == "Membership"]) - mean(avg_purch[card == "NoMembership"]))
+
+# Matching Methods:
+
+# (Coarsened) Exact Matching
+coarsened_exact_data <- Match(Y = data$avg_purch, Tr = data$card, X = cbind(data$age, data$sex, data$pre_avg_purch))
+coarsened_exact_ate <- mean(data$avg_purch[coarsened_exact_data$index.treated]) - mean(data$avg_purch[coarsened_exact_data$index.control])
+
+# Nearest-Neighbor Matching
+nn_match_data <- Match(Y = data$avg_purch, Tr = data$card, X = cbind(data$age, data$sex, data$pre_avg_purch), M=1)
+nn_ate <- mean(data$avg_purch[nn_match_data$index.treated]) - mean(data$avg_purch[nn_match_data$index.control])
+
+# Inverse Probability Weighting
+ipw_model <- try(glm(card == "Membership" ~ age + sex + pre_avg_purch, family = "binomial", data = data), silent = TRUE)
+
+if (length(class(ipw_model)) > 1 && class(ipw_model)[2] == "try-error") {
+  cat("Warning: Logistic regression did not converge for Inverse Probability Weighting.\n")
+  ipw_ate <- NaN
+} else {
+  data$ipw_weights <- 1/predict(ipw_model, type = "response")
+  ipw_ate <- with(data, mean(ipw_weights * avg_purch[card == "Membership"]) - mean(ipw_weights * avg_purch[card == "NoMembership"]))
+}
+
+# Print results
+cat("Naive ATE:", naive_ate, "\n")
+cat("(Coarsened) Exact Matching ATE:", coarsened_exact_ate, "\n")
+cat("Nearest-Neighbor Matching ATE:", nn_ate, "\n")
+cat("Inverse Probability Weighting ATE:", ipw_ate, "\n")
+```

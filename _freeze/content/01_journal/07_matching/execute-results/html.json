@@ -1,0 +1,18 @@
+{
+  "hash": "c12dc1289083820402ed0530b8059981",
+  "result": {
+    "markdown": "---\ntitle: \"Matching and Subclassification\"\n---\n\n::: {.cell hash='07_matching_cache/html/unnamed-chunk-1_eef68f5fcee26b01000d10228df56195'}\n\n```{.r .cell-code}\n# Load necessary libraries\n# Load necessary libraries\nlibrary(Matching)\n\n# Load your data\ndata <- readRDS(\"C:\\\\Users\\\\Deniz\\\\Documents\\\\GitHub\\\\Causal_Data_Science_Data\\\\membership.rds\")\n\n\n# Compute a Naive Estimate of Average Treatment Effect\nnaive_ate <- with(data, mean(avg_purch[card == \"Membership\"]) - mean(avg_purch[card == \"NoMembership\"]))\n\n# Matching Methods:\n\n# (Coarsened) Exact Matching\ncoarsened_exact_data <- Match(Y = data$avg_purch, Tr = data$card, X = cbind(data$age, data$sex, data$pre_avg_purch))\ncoarsened_exact_ate <- mean(data$avg_purch[coarsened_exact_data$index.treated]) - mean(data$avg_purch[coarsened_exact_data$index.control])\n\n# Nearest-Neighbor Matching\nnn_match_data <- Match(Y = data$avg_purch, Tr = data$card, X = cbind(data$age, data$sex, data$pre_avg_purch), M=1)\nnn_ate <- mean(data$avg_purch[nn_match_data$index.treated]) - mean(data$avg_purch[nn_match_data$index.control])\n\n# Inverse Probability Weighting\nipw_model <- try(glm(card == \"Membership\" ~ age + sex + pre_avg_purch, family = \"binomial\", data = data), silent = TRUE)\n```\n\n::: {.cell-output .cell-output-stderr}\n```\n#> Warning: glm.fit: Algorithmus konvergierte nicht\n```\n:::\n\n```{.r .cell-code}\nif (length(class(ipw_model)) > 1 && class(ipw_model)[2] == \"try-error\") {\n  cat(\"Warning: Logistic regression did not converge for Inverse Probability Weighting.\\n\")\n  ipw_ate <- NaN\n} else {\n  data$ipw_weights <- 1/predict(ipw_model, type = \"response\")\n  ipw_ate <- with(data, mean(ipw_weights * avg_purch[card == \"Membership\"]) - mean(ipw_weights * avg_purch[card == \"NoMembership\"]))\n}\n\n# Print results\ncat(\"Naive ATE:\", naive_ate, \"\\n\")\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n#> Naive ATE: NaN\n```\n:::\n\n```{.r .cell-code}\ncat(\"(Coarsened) Exact Matching ATE:\", coarsened_exact_ate, \"\\n\")\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n#> (Coarsened) Exact Matching ATE: 14.65687\n```\n:::\n\n```{.r .cell-code}\ncat(\"Nearest-Neighbor Matching ATE:\", nn_ate, \"\\n\")\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n#> Nearest-Neighbor Matching ATE: 14.65687\n```\n:::\n\n```{.r .cell-code}\ncat(\"Inverse Probability Weighting ATE:\", ipw_ate, \"\\n\")\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n#> Inverse Probability Weighting ATE: NaN\n```\n:::\n:::",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-in-header": [
+        "<link href=\"../../site_libs/pagedtable-1.1/css/pagedtable.css\" rel=\"stylesheet\" />\r\n<script src=\"../../site_libs/pagedtable-1.1/js/pagedtable.js\"></script>\r\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
