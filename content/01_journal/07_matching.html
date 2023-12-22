@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -63,6 +97,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+
+<link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
 
 </head>
@@ -176,17 +213,57 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<div class="cell" data-hash="07_matching_cache/html/unnamed-chunk-1_eef68f5fcee26b01000d10228df56195">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">library</span>(Matching)</span>
+<span id="cb1-4"><a href="#cb1-4"></a></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co"># Load your data</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"C:</span><span class="sc">\\</span><span class="st">Users</span><span class="sc">\\</span><span class="st">Deniz</span><span class="sc">\\</span><span class="st">Documents</span><span class="sc">\\</span><span class="st">GitHub</span><span class="sc">\\</span><span class="st">Causal_Data_Science_Data</span><span class="sc">\\</span><span class="st">membership.rds"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7"></a></span>
+<span id="cb1-8"><a href="#cb1-8"></a></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="co"># Compute a Naive Estimate of Average Treatment Effect</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>naive_ate <span class="ot">&lt;-</span> <span class="fu">with</span>(data, <span class="fu">mean</span>(avg_purch[card <span class="sc">==</span> <span class="st">"Membership"</span>]) <span class="sc">-</span> <span class="fu">mean</span>(avg_purch[card <span class="sc">==</span> <span class="st">"NoMembership"</span>]))</span>
+<span id="cb1-11"><a href="#cb1-11"></a></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="co"># Matching Methods:</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a></span>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="co"># (Coarsened) Exact Matching</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a>coarsened_exact_data <span class="ot">&lt;-</span> <span class="fu">Match</span>(<span class="at">Y =</span> data<span class="sc">$</span>avg_purch, <span class="at">Tr =</span> data<span class="sc">$</span>card, <span class="at">X =</span> <span class="fu">cbind</span>(data<span class="sc">$</span>age, data<span class="sc">$</span>sex, data<span class="sc">$</span>pre_avg_purch))</span>
+<span id="cb1-16"><a href="#cb1-16"></a>coarsened_exact_ate <span class="ot">&lt;-</span> <span class="fu">mean</span>(data<span class="sc">$</span>avg_purch[coarsened_exact_data<span class="sc">$</span>index.treated]) <span class="sc">-</span> <span class="fu">mean</span>(data<span class="sc">$</span>avg_purch[coarsened_exact_data<span class="sc">$</span>index.control])</span>
+<span id="cb1-17"><a href="#cb1-17"></a></span>
+<span id="cb1-18"><a href="#cb1-18"></a><span class="co"># Nearest-Neighbor Matching</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a>nn_match_data <span class="ot">&lt;-</span> <span class="fu">Match</span>(<span class="at">Y =</span> data<span class="sc">$</span>avg_purch, <span class="at">Tr =</span> data<span class="sc">$</span>card, <span class="at">X =</span> <span class="fu">cbind</span>(data<span class="sc">$</span>age, data<span class="sc">$</span>sex, data<span class="sc">$</span>pre_avg_purch), <span class="at">M=</span><span class="dv">1</span>)</span>
+<span id="cb1-20"><a href="#cb1-20"></a>nn_ate <span class="ot">&lt;-</span> <span class="fu">mean</span>(data<span class="sc">$</span>avg_purch[nn_match_data<span class="sc">$</span>index.treated]) <span class="sc">-</span> <span class="fu">mean</span>(data<span class="sc">$</span>avg_purch[nn_match_data<span class="sc">$</span>index.control])</span>
+<span id="cb1-21"><a href="#cb1-21"></a></span>
+<span id="cb1-22"><a href="#cb1-22"></a><span class="co"># Inverse Probability Weighting</span></span>
+<span id="cb1-23"><a href="#cb1-23"></a>ipw_model <span class="ot">&lt;-</span> <span class="fu">try</span>(<span class="fu">glm</span>(card <span class="sc">==</span> <span class="st">"Membership"</span> <span class="sc">~</span> age <span class="sc">+</span> sex <span class="sc">+</span> pre_avg_purch, <span class="at">family =</span> <span class="st">"binomial"</span>, <span class="at">data =</span> data), <span class="at">silent =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>#&gt; Warning: glm.fit: Algorithmus konvergierte nicht</code></pre>
 </div>
-<div class="callout-title-container flex-fill">
-Note
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="cf">if</span> (<span class="fu">length</span>(<span class="fu">class</span>(ipw_model)) <span class="sc">&gt;</span> <span class="dv">1</span> <span class="sc">&amp;&amp;</span> <span class="fu">class</span>(ipw_model)[<span class="dv">2</span>] <span class="sc">==</span> <span class="st">"try-error"</span>) {</span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="fu">cat</span>(<span class="st">"Warning: Logistic regression did not converge for Inverse Probability Weighting.</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3"></a>  ipw_ate <span class="ot">&lt;-</span> <span class="cn">NaN</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>} <span class="cf">else</span> {</span>
+<span id="cb3-5"><a href="#cb3-5"></a>  data<span class="sc">$</span>ipw_weights <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span><span class="fu">predict</span>(ipw_model, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6"></a>  ipw_ate <span class="ot">&lt;-</span> <span class="fu">with</span>(data, <span class="fu">mean</span>(ipw_weights <span class="sc">*</span> avg_purch[card <span class="sc">==</span> <span class="st">"Membership"</span>]) <span class="sc">-</span> <span class="fu">mean</span>(ipw_weights <span class="sc">*</span> avg_purch[card <span class="sc">==</span> <span class="st">"NoMembership"</span>]))</span>
+<span id="cb3-7"><a href="#cb3-7"></a>}</span>
+<span id="cb3-8"><a href="#cb3-8"></a></span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="co"># Print results</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="fu">cat</span>(<span class="st">"Naive ATE:"</span>, naive_ate, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Naive ATE: NaN</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">cat</span>(<span class="st">"(Coarsened) Exact Matching ATE:"</span>, coarsened_exact_ate, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; (Coarsened) Exact Matching ATE: 14.65687</code></pre>
 </div>
-<div class="callout-body-container callout-body">
-<p>You can delete everything in here and start fresh.</p>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">cat</span>(<span class="st">"Nearest-Neighbor Matching ATE:"</span>, nn_ate, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Nearest-Neighbor Matching ATE: 14.65687</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">cat</span>(<span class="st">"Inverse Probability Weighting ATE:"</span>, ipw_ate, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Inverse Probability Weighting ATE: NaN</code></pre>
 </div>
 </div>
 
