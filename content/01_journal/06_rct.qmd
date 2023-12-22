@@ -2,6 +2,53 @@
 title: "Randomized Controlled Trials"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+```{r}
+# Load necessary libraries
+library(tidyverse)
+
+# Load the data
+abtest_data <- readRDS("C:\\Users\\Deniz\\Documents\\GitHub\\Causal_Data_Science_Data\\abtest_online.rds")
+
+# Explore the data
+head(abtest_data)
+summary(abtest_data)
+
+# Check covariate balance across groups
+covariate_balance_plot <- ggplot(abtest_data, aes(x = chatbot, y = mobile_device, color = chatbot)) +
+  geom_boxplot() +
+  labs(title = "Covariate Balance Check",
+       x = "Chatbot",
+       y = "Mobile Device") +
+  theme_minimal()
+
+# Display covariate balance plot
+print(covariate_balance_plot)
+
+# Run a regression to find the effect of chatbot on sales (purchase_amount)
+regression_model <- lm(purchase_amount ~ chatbot + mobile_device + previous_visit, data = abtest_data)
+summary(regression_model)
+
+# Find subgroup-specific effects by including an interaction term
+interaction_model <- lm(purchase_amount ~ chatbot * mobile_device + previous_visit, data = abtest_data)
+summary(interaction_model)
+
+# Compute CATE for mobile users
+mobile_users_effect <- coef(interaction_model)["chatbotTRUE:mobile_deviceTRUE"]
+
+# Run a logistic regression for binary outcome (purchase)
+logistic_model <- glm(purchase ~ chatbot + mobile_device + previous_visit, 
+                      family = binomial(link = 'logit'), data = abtest_data)
+summary(logistic_model)
+
+```
+
+
+
+2. chatbotTRUE: The estimated change in purchase_amount when chatbot is TRUE compared to when it is FALSE. A negative coefficient suggests that the presence of a chatbot is associated with a decrease in purchase_amount.
+
+
+3. The CATE for mobile users (chatbotTRUE:mobile_deviceTRUE)is -0.06455 in the model. However, this coefficient is not statistically significant, indicating that there is no significant distinction in the impact of the chatbot on sales (purchase_amount) between mobile and non-mobile users.
+
+4. Coefficient for chatbotTRUE in the logistic regression model is -0.96894. Therefore:
+
+A negative coefficient suggests that the presence of the chatbot is associated with a decrease in the log-odds of making a purchase compared to when the chatbot is not present. It implies that customers exposed to the chatbot are less likely to make a purchase (purchase = 1) compared to those not exposed, according to the model.
