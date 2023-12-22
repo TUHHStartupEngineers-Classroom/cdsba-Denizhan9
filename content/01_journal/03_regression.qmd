@@ -37,6 +37,7 @@ The coefficient estimate is positive that means that cars having a rear engine l
 
 ##Add variable
 ```{r}
+library(dplyr)
 mut_df <- df %>% mutate(seat_heating = TRUE)
 model <- lm(price ~ ., data = mut_df)
 summary(model)

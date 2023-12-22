@@ -1,0 +1,18 @@
+{
+  "hash": "85f5e9d3bc91b4a13a07adc7a263e557",
+  "result": {
+    "markdown": "---\ntitle: \"Causality\"\n---\n\n\n##Assignment\n\n::: {.cell hash='04_causality_cache/html/unnamed-chunk-1_b5aa7b7a72f9faf9e0c829ba835f79e3'}\n\n```{.r .cell-code}\nlibrary(ggplot2)\nlibrary(dplyr)\n```\n\n::: {.cell-output .cell-output-stderr}\n```\n#> \n#> Attache Paket: 'dplyr'\n```\n:::\n\n::: {.cell-output .cell-output-stderr}\n```\n#> Die folgenden Objekte sind maskiert von 'package:stats':\n#> \n#>     filter, lag\n```\n:::\n\n::: {.cell-output .cell-output-stderr}\n```\n#> Die folgenden Objekte sind maskiert von 'package:base':\n#> \n#>     intersect, setdiff, setequal, union\n```\n:::\n\n```{.r .cell-code}\nmonth <- c(1:12)\nice_cream_consumption <- c(50, 48, 40, 35, 30, 25, 15, 12, 25, 35, 48, 55)\ndrownings <- c(10, 15, 20, 25, 30, 40, 55, 60, 45, 35, 22, 15)\n\ndf1 <- data.frame(month, ice_cream_consumption)\ndf2 <- data.frame(month, drownings)\n\n\nggplot() +\n  geom_line(data = df1, aes(x = month, y = ice_cream_consumption, color = \"Ice Cream Consumption\"), linetype = \"solid\") +\n  geom_line(data = df2, aes(x = month, y = drownings, color = \"Number of Drownings\"), linetype = \"dashed\") +\n  scale_y_continuous(name = \"Ice Cream Consumption\", sec.axis = sec_axis(~., name = \"Number of Drownings\")) +\n  scale_color_manual(values = c(\"Ice Cream Consumption\" = \"blue\", \"Number of Drownings\" = \"red\")) +\n  labs(x = \"Month\") +\n  ggtitle(\"Two Line Plots: Ice Cream and Drowning\")\n```\n\n::: {.cell-output-display}\n![](04_causality_files/figure-html/unnamed-chunk-1-1.png){width=672}\n:::\n:::",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-in-header": [
+        "<link href=\"../../site_libs/pagedtable-1.1/css/pagedtable.css\" rel=\"stylesheet\" />\r\n<script src=\"../../site_libs/pagedtable-1.1/js/pagedtable.js\"></script>\r\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -2,6 +2,57 @@
 title: "Directed Acyclic Graphs"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+##Assignment
+```{r}
+# Load necessary libraries
+library(ggplot2)
+library(dagitty)
+
+# Load the data
+data <- readRDS("C:\\Users\\Deniz\\Documents\\GitHub\\Causal_Data_Science_Data\\customer_sat.rds")
+
+# Explore the data
+head(data)
+summary(data)
+
+# Regression without accounting for subscription
+model1 <- lm(satisfaction ~ follow_ups, data = data)
+summary(model1)
+
+# Regression accounting for subscription
+model2 <- lm(satisfaction ~ follow_ups + subscription, data = data)
+summary(model2)
+```
+Model 1:
+
+Intercept = 78.9
+
+Follow-up coefficient = -3.3
+
+Model 2:
+
+Intercept = 26.8
+
+Follow-up coefficient = 2.2
+Subscription Premium coefficient = 44.7
+Subscription Premium+ coefficient = 18.1
+
+
+In the model without accounting for subscription (model1), the negative coefficient for follow-up calls suggests that more follow-up calls are associated with lower satisfaction. However, this might be confounded by the type of subscription.
+
+In the model accounting for subscription (model2), the positive coefficient for follow-up calls suggests that, after accounting for subscription type, more follow-up calls are associated with higher satisfaction.
+
+The positive coefficients for the "Premium" and "Premium+" subscription levels suggest that clients with these subscriptions tend to report higher satisfaction compared to the reference level.
+
+
+
+```{r}
+# Plot the data
+ggplot(data, aes(x = follow_ups, y = satisfaction, color = subscription)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Relationship Between Follow-up Calls and Satisfaction",
+       x = "Number of Follow-up Calls",
+       y = "Satisfaction") +
+  theme_minimal()
+```
