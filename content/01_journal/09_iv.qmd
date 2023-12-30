@@ -2,6 +2,59 @@
 title: "Instrumental Variables"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+```{r}
+library(tidyverse)
+library(dagitty)
+library(ggdag)
+df <- readRDS("data/rand_enc.rds")
+
+iv_enc <- dagify(
+  Y ~ D,
+  Y ~ U,
+  D ~ U,
+  D ~ Z,
+  latent = "U",
+  outcome = "Y",
+  exposure = "D",
+  coords = list(x = c(U = 1, D = 0.5, Y = 1.5, Z = 0),
+                y = c(U = 0, D = 1, Y = 1, Z = 1)),
+  labels = c("D" = "Used feature", 
+             "Y" = "Time on app", 
+             "U" = "Unobserved characteristics",
+             "Z" = "Random encouragement")
+)
+ggdag(iv_enc, text = T) +
+#  guides(color = "none") +
+  geom_dag_text(color = "white") +
+  geom_dag_edges(edge_color = "black") +
+  geom_dag_label_repel(aes(label = label))
+```
+
+```{r}
+# Load the data
+rand_enc_data <- readRDS("data/rand_enc.rds")
+
+# Task 2: Compute the naive, biased estimate
+naive_model <- lm(time_spent ~ used_ftr, data = rand_enc_data)
+summary(naive_model)
+
+# Task 3: Assumption Testing
+# No assumptions related to correlations can be tested with the available data.
+
+# Task 4: Instrumental Variable Estimation
+# Assuming Z is the instrument (replace Z with the actual instrument variable)
+first_stage <- lm(used_ftr ~ rand_enc, data = rand_enc_data)
+summary(first_stage)
+
+# Second Stage (2SLS)
+second_stage <- lm(time_spent ~ fitted(first_stage), data = rand_enc_data)
+summary(second_stage)
+
+# Compare naive estimate with IV estimate
+naive_coefficient <- coef(naive_model)["used_ftr"]
+iv_coefficient <- coef(second_stage)["fitted(first_stage)"]
+
+cat("Naive Estimate: ", naive_coefficient, "\n")
+cat("IV Estimate: ", iv_coefficient, "\n")
+
+```

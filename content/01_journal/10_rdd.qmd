@@ -2,6 +2,192 @@
 title: "Regression Discontinuity"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+# Assignment 1
+
+## Results with half the bandwidth
+
+As can be observed from the code below, the results do not appear to be very sensitive to a reduction in the bandwidth. The local average treatment effect changes from 7.99 to 7.36, which is a small change considering the bandwidth was halved (a relative change of 8%). However, the slope of the average treatment effect appears to be steeper than before.
+```{r}
+library(estimatr)
+library(ggdag)
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+
+df <- readRDS("data/coupon.rds")
+
+c0 <- 60
+bw <- c0 + c(-2.5, 2.5)
+
+# Subsets below and above threshold in specified bandwidth
+df_bw_below <- df %>% filter(days_since_last >= bw[1] & days_since_last < c0)
+df_bw_above <- df %>% filter(days_since_last >= c0 & days_since_last <= bw[2])
+
+model_bw_below <- lm(purchase_after ~ days_since_last, df_bw_below)
+model_bw_above <- lm(purchase_after ~ days_since_last, df_bw_above)
+
+y0 <- predict(model_bw_below, tibble(days_since_last = c0))
+y1 <- predict(model_bw_above, tibble(days_since_last = c0))
+
+late <- y1 - y0
+sprintf("LATE: %.2f", late)
+
+df_bw <- bind_rows(df_bw_above, df_bw_below)
+min_y <- min(df_bw$purchase_after)
+max_y <- max(df_bw$purchase_after)
+
+# Add lines for vertical distance and change limits of x-axis.
+dep_var_bw <- 
+  ggplot(df_bw, aes(x = days_since_last, y = purchase_after, color = coupon)) +
+  geom_vline(xintercept = c0, color = "blue", linewidth = 2) +
+  geom_point(alpha = 0.4, size = 1) +
+  geom_smooth(data = df_bw_below, method = "lm", se = F, linewidth = 2) +
+  geom_smooth(data = df_bw_above, method = "lm", se = F, linewidth = 2) +
+  geom_segment(aes(x = c0, xend = bw[2], y = y0, yend = y0),
+               linetype = "dotted", color = "red") +
+  geom_segment(aes(x = bw[1], xend = c0, y = y1, yend = y1),
+               linetype = "dotted", color = "red") +
+  annotate("text", x = c0+2, y = mean(c(y1, y0)-2),
+           label = sprintf("Difference: %.2f", (y1 - y0)),
+           color = "green", fontface = 2) +
+  scale_y_continuous(limits = c(min_y, max_y)) + 
+  scale_color_discrete(labels = c("No coupon", "Coupon")) +
+  xlab("Days since last purchase") +
+  ylab("Purchase after coupon assignment") +
+  theme(legend.title = element_blank())
+dep_var_bw
+```
+
+## Results with twice the bandwidth
+
+Doubling the bandwidth increases the LATE by a factor of 1,19. The average treatment effect appears almost constant aside from the jump at the cut-off point.
+```{r}
+
+df <- readRDS("data/coupon.rds")
+
+c0 <- 60
+bw <- c0 + c(-10, 10)
+
+# Subsets below and above threshold in specified bandwidth
+df_bw_below <- df %>% filter(days_since_last >= bw[1] & days_since_last < c0)
+df_bw_above <- df %>% filter(days_since_last >= c0 & days_since_last <= bw[2])
+
+model_bw_below <- lm(purchase_after ~ days_since_last, df_bw_below)
+model_bw_above <- lm(purchase_after ~ days_since_last, df_bw_above)
+
+y0 <- predict(model_bw_below, tibble(days_since_last = c0))
+y1 <- predict(model_bw_above, tibble(days_since_last = c0))
+
+late <- y1 - y0
+sprintf("LATE: %.2f", late)
+
+df_bw <- bind_rows(df_bw_above, df_bw_below)
+min_y <- min(df_bw$purchase_after)
+max_y <- max(df_bw$purchase_after)
+
+# Add lines for vertical distance and change limits of x-axis.
+dep_var_bw <- 
+  ggplot(df_bw, aes(x = days_since_last, y = purchase_after, color = coupon)) +
+  geom_vline(xintercept = c0, color = "blue", linewidth = 2) +
+  geom_point(alpha = 0.4, size = 1) +
+  geom_smooth(data = df_bw_below, method = "lm", se = F, linewidth = 2) +
+  geom_smooth(data = df_bw_above, method = "lm", se = F, linewidth = 2) +
+  geom_segment(aes(x = c0, xend = bw[2], y = y0, yend = y0),
+               linetype = "dotted", color = "red") +
+  geom_segment(aes(x = bw[1], xend = c0, y = y1, yend = y1),
+               linetype = "dotted", color = "red") +
+  annotate("text", x = c0+2, y = mean(c(y1, y0)-2),
+           label = sprintf("Difference: %.2f", (y1 - y0)),
+           color = "green", fontface = 2) +
+  scale_y_continuous(limits = c(min_y, max_y)) + 
+  scale_color_discrete(labels = c("No coupon", "Coupon")) +
+  xlab("Days since last purchase") +
+  ylab("Purchase after coupon assignment") +
+  theme(legend.title = element_blank())
+dep_var_bw
+```
+
+# Assignment 2
+Since there is a noticable incline at the cut-off point, there appears to be non-random heaping. I would therefore argue that if the purchase amount were to be used as a running variable, the cut-off point should be chosen differently (e.g. at about 50€).
+```{r}
+df <- readRDS(("data/shipping.rds"))
+
+ggplot(df, aes(x = purchase_amount)) +
+  geom_histogram(binwidth = 5, fill = "blue", color = "black") +
+  geom_vline(xintercept = 30, linetype = "dashed", color = "red", linewidth = 1) +
+  labs(title = "Distribution of purchase amounts with cut-off at 30€",
+       x = "Purchase amount (€)",
+       y = "Frequency") +
+  theme_minimal()
+```
+
+```{r}
+# Load required libraries
+library(tidyverse)
+library(ggplot2)
+library(rddensity)  # Make sure to install the rddensity package if not already installed
+
+# Function to perform RDD analysis
+run_rdd_analysis <- function(df, c0, bandwidth_factor) {
+  # Specify bandwidth
+  bandwidth <- c0 + c(-bandwidth_factor, bandwidth_factor)
+
+  # Subsets below and above threshold in specified bandwidth
+  df_below <- df %>% filter(days_since_last >= bandwidth[1] & days_since_last < c0)
+  df_above <- df %>% filter(days_since_last >= c0 & days_since_last <= bandwidth[2])
+
+  # Fit linear models
+  model_below <- lm(purchase_after ~ days_since_last, df_below)
+  model_above <- lm(purchase_after ~ days_since_last, df_above)
+
+  # Predict outcomes at the cutoff
+  y0 <- predict(model_below, tibble(days_since_last = c0))
+  y1 <- predict(model_above, tibble(days_since_last = c0))
+
+  # Calculate local average treatment effect (LATE)
+  late <- y1 - y0
+
+  # Return the LATE
+  return(late)
+}
+
+# Read data for the first assignment
+df_coupon <- readRDS("data/coupon.rds")
+
+# Define cutoff value
+c0_coupon <- 60
+
+# Perform RDD analysis with different bandwidths
+late_half_bandwidth <- run_rdd_analysis(df_coupon, c0_coupon, 2.5)
+late_double_bandwidth <- run_rdd_analysis(df_coupon, c0_coupon, 10)
+
+# Print results
+cat("LATE with half the bandwidth:", late_half_bandwidth, "\n")
+cat("LATE with double the bandwidth:", late_double_bandwidth, "\n")
+
+# Visualization for the first assignment
+df_coupon %>%
+  ggplot(aes(x = days_since_last, y = purchase_after, color = coupon)) +
+  geom_vline(xintercept = c0_coupon, linetype = "dashed") +
+  geom_point(alpha = 0.4, size = 1) +
+  geom_smooth(method = "lm", se = FALSE, linetype = "solid") +
+  labs(title = "RDD Analysis for Coupon Dataset",
+       x = "Days since last purchase",
+       y = "Purchase after coupon assignment",
+       color = "Coupon") +
+  theme_minimal()
+
+# Read data for the second assignment
+df_shipping <- readRDS("shipping.rds")
+
+# Visualization for the second assignment
+df_shipping %>%
+  ggplot(aes(x = purchase_amount)) +
+  geom_histogram(binwidth = 5, fill = "blue", color = "black") +
+  geom_vline(xintercept = 30, linetype = "dashed", color = "red", size = 1) +
+  labs(title = "Distribution of Purchase Amounts with Cut-off at 30€",
+       x = "Purchase amount (€)",
+       y = "Frequency") +
+  theme_minimal()
+
+```

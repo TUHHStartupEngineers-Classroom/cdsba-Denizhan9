@@ -2,6 +2,37 @@
 title: "Difference-in-Differences"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+```{r}
+library(dplyr)
+df <- readRDS("data/hospdd.rds")
+str(df)
+
+# Select the hospitals for which the new admission procedure will be applied
+new_procedure_hospitals <- unique(df$hospital[df$procedure == 1])
+new_procedure_hospitals
+
+treated_data <- df %>% filter(hospital %in% new_procedure_hospitals)
+mean_satisfaction_tb <- treated_data %>% filter(month == 3) %>% summarise(mean_satisfaction_tb = mean(satis, na.rm = TRUE)) %>% pull(mean_satisfaction_tb)
+mean_satisfaction_ta <- treated_data %>% filter(month == 4) %>% summarise(mean_satisfaction_ta = mean(satis, na.rm = TRUE)) %>% pull(mean_satisfaction_ta)
+
+control_data <- df %>% filter(!hospital %in% new_procedure_hospitals)
+mean_satisfaction_cb <- control_data %>% filter(month == 3) %>% summarise(mean_satisfaction_cb = mean(satis, na.rm = TRUE)) %>% pull(mean_satisfaction_cb)
+mean_satisfaction_ca <- control_data %>% filter(month == 4) %>% summarise(mean_satisfaction_ca = mean(satis, na.rm = TRUE)) %>% pull(mean_satisfaction_ca)
+
+DiD_estimate_b <- mean_satisfaction_ta - mean_satisfaction_cb
+DiD_estimate_a <- mean_satisfaction_tb - mean_satisfaction_ca
+
+DiD <- DiD_estimate_a - DiD_estimate_b
+cat("Estimated DiD: ", DiD)
+
+
+model1 <- lm(satis ~ procedure + month + hospital, data = df)
+summary(model1)
+
+model2 <- lm(satis ~ procedure + as.factor(month) + as.factor(hospital), data = df)
+summary(model2)
+
+
+```
+
+The main difference between including variables directly and as factors is how they are treated. When treated as factors, each unique value or level of the variable is considered a separate category. This means that for each hospital or month, different effects can be observed individually.

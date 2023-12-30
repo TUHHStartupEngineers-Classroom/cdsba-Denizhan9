@@ -6,6 +6,7 @@ title: "Causality"
 ```{r}
 library(ggplot2)
 library(dplyr)
+#source: https://tylervigen.com/spurious-correlations 
 month <- c(1:12)
 ice_cream_consumption <- c(50, 48, 40, 35, 30, 25, 15, 12, 25, 35, 48, 55)
 drownings <- c(10, 15, 20, 25, 30, 40, 55, 60, 45, 35, 22, 15)

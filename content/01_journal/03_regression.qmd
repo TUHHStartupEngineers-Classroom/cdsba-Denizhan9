@@ -9,6 +9,7 @@ title: "Regression and Statistical Inference"
 df <- readRDS("data/car_prices.rds")
 dim(df)
 View(df)
+cat("Dimensions: ", dim(df), "\n")
 ```
 The dimensions are 181 x 22
 
@@ -17,7 +18,7 @@ The dimensions are 181 x 22
 summary(df)
 str(df)
 ```
-Numbers are defined as num and strings als chr.
+Numbers are defined as ("num") and strings ("chr").
 
 ##Linear regression
 ```{r}
@@ -43,4 +44,4 @@ model <- lm(price ~ ., data = mut_df)
 summary(model)
 ```
 
-The output for some reason shows NA which I dont understand. I would expect the p-value to be 0 resulting to the seat heating having an extremely low significance on the price. Which makes sense when you consider that all cars in the dataframe use it. 
+The output for some reason shows NA which I don't understand. I would expect the p-value to be 0 resulting to the seat heating having an extremely low significance on the price. Which makes sense when you consider that all cars in the dataframe use it. 

@@ -1,43 +1,87 @@
 ---
 title: "Matching and Subclassification"
 ---
+```{r}
+library(tidyverse)
+library(dagitty)
+library(ggdag)
+df <- readRDS(("data/membership.rds"))
+
+dag_model <- 'dag {
+bb="0,0,1,1"
+age [pos="0.2,0.2"]
+sex [pos="0.3,0.2"]
+card [exposure,pos="0.3,0.6"]
+avg_pur [outcome,pos="0.4,0.4"]
+pre_avg_pur [pos="0.2,0.6"]
+card -> avg_pur
+pre_avg_pur -> Avg_purch
+pre_avg_pur -> card
+age -> card
+age -> pre_avg_pur
+sex -> card
+sex -> pre_avg_pur
+}
+'
+# draw DAG
+ggdag_status(dag_model) +
+  guides(fill = "none", color = "none") +  # Disable the legend
+  geom_dag_edges(edge_color = "black")
+```
 
 ```{r}
-# Load necessary libraries
-# Load necessary libraries
+library(MatchIt)
+library(dplyr)
 library(Matching)
 
+
 # Load your data
-data <- readRDS("C:\\Users\\Deniz\\Documents\\GitHub\\Causal_Data_Science_Data\\membership.rds")
+data <- readRDS("data/membership.rds")
+
+# Assignment 2: Linear Regression Model
+model_linear <- lm(avg_purch ~ card, data = data)
+summary(model_linear)
+
+# Assignment 3: Causal Inference Analysis
+cem_match <- matchit(card ~ pre_avg_purch + age + sex,
+                     data = data,
+                     method = 'cem',
+                     estimand = 'ATE')
+data_cem <- match.data(cem_match)
+model_cem <- lm(avg_purch ~ card, data = data_cem, weights = weights)
+summary(model_cem)
+
+nn_match <- matchit(card ~ pre_avg_purch + age + sex,
+                    data = data,
+                    method = "nearest",
+                    distance = "mahalanobis",
+                    replace = TRUE)
+data_nn <- match.data(nn_match)
+model_nn <- lm(pre_avg_purch ~ card, data = data_nn, weights = weights)
+summary(model_nn)
+
+propensity_model <- glm(card ~ pre_avg_purch + age + sex,
+                        data = data,
+                        family = binomial(link = "logit"))
+data_augmented <- data %>% mutate(propensity_score = predict(propensity_model, type = "response"))
 
 
-# Compute a Naive Estimate of Average Treatment Effect
-naive_ate <- with(data, mean(avg_purch[card == "Membership"]) - mean(avg_purch[card == "NoMembership"]))
+data_ipw <- data_augmented %>% mutate(
+  ipw_score = (card / propensity_score) + ((1 - card) / (1 - propensity_score))
+)
 
-# Matching Methods:
+model_ipw <- lm(avg_purch ~ card, data = data_ipw, weights = ipw_score)
+summary(model_ipw)
 
-# (Coarsened) Exact Matching
-coarsened_exact_data <- Match(Y = data$avg_purch, Tr = data$card, X = cbind(data$age, data$sex, data$pre_avg_purch))
-coarsened_exact_ate <- mean(data$avg_purch[coarsened_exact_data$index.treated]) - mean(data$avg_purch[coarsened_exact_data$index.control])
+model_ipw_trim <- lm(avg_purch ~ card,
+                     data = data_ipw %>% filter(propensity_score %>% between(0.15, 0.85)),
+                     weights = ipw_score)
+summary(model_ipw_trim)
 
-# Nearest-Neighbor Matching
-nn_match_data <- Match(Y = data$avg_purch, Tr = data$card, X = cbind(data$age, data$sex, data$pre_avg_purch), M=1)
-nn_ate <- mean(data$avg_purch[nn_match_data$index.treated]) - mean(data$avg_purch[nn_match_data$index.control])
-
-# Inverse Probability Weighting
-ipw_model <- try(glm(card == "Membership" ~ age + sex + pre_avg_purch, family = "binomial", data = data), silent = TRUE)
-
-if (length(class(ipw_model)) > 1 && class(ipw_model)[2] == "try-error") {
-  cat("Warning: Logistic regression did not converge for Inverse Probability Weighting.\n")
-  ipw_ate <- NaN
-} else {
-  data$ipw_weights <- 1/predict(ipw_model, type = "response")
-  ipw_ate <- with(data, mean(ipw_weights * avg_purch[card == "Membership"]) - mean(ipw_weights * avg_purch[card == "NoMembership"]))
-}
-
-# Print results
-cat("Naive ATE:", naive_ate, "\n")
-cat("(Coarsened) Exact Matching ATE:", coarsened_exact_ate, "\n")
-cat("Nearest-Neighbor Matching ATE:", nn_ate, "\n")
-cat("Inverse Probability Weighting ATE:", ipw_ate, "\n")
+model_summary <- modelsummary::modelsummary(list("Naive" = model_linear,
+                                                 "CEM" = model_cem,
+                                                 "NN" = model_nn,
+                                                 "IPW1" = model_ipw,
+                                                 "IPW2" = model_ipw_trim))
+model_summary
 ```

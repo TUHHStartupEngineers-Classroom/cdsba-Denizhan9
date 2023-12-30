@@ -4,6 +4,28 @@ title: "Directed Acyclic Graphs"
 
 ##Assignment
 ```{r}
+library(tidyverse)
+library(dagitty)
+library(ggdag)
+dag <- dagify(
+  X ~ Z,
+  Y ~ Z,
+  Y ~ X,
+  coords = list(x = c(Y = 3, Z = 2, X = 1),
+                y = c(Y = 0, Z = 1, X = 0)),
+  labels = list(X = "Parking spots",
+                Y = "Sales",
+                Z = "Customers")
+)
+
+# Plot DAG
+ggdag(dag) +
+  geom_dag_text(color = "white") +
+  geom_dag_edges(edge_color = "black") +
+  geom_dag_label_repel(aes(label = label))
+```
+
+```{r}
 # Load necessary libraries
 library(ggplot2)
 library(dagitty)
@@ -43,7 +65,6 @@ In the model without accounting for subscription (model1), the negative coeffici
 In the model accounting for subscription (model2), the positive coefficient for follow-up calls suggests that, after accounting for subscription type, more follow-up calls are associated with higher satisfaction.
 
 The positive coefficients for the "Premium" and "Premium+" subscription levels suggest that clients with these subscriptions tend to report higher satisfaction compared to the reference level.
-
 
 
 ```{r}

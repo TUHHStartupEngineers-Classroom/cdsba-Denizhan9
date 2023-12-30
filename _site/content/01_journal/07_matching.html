@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Oliver Mork">
 
 <title>MyLabJournal - Matching and Subclassification</title>
 <style>
@@ -77,6 +76,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -98,13 +100,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-<link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
 
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -184,9 +186,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    </div>
+    
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -199,12 +199,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Oliver Mork </p>
-          </div>
-  </div>
     
   
     
@@ -213,57 +207,302 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<div class="cell" data-hash="07_matching_cache/html/unnamed-chunk-1_eef68f5fcee26b01000d10228df56195">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Load necessary libraries</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="co"># Load necessary libraries</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">library</span>(Matching)</span>
-<span id="cb1-4"><a href="#cb1-4"></a></span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="co"># Load your data</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a>data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"C:</span><span class="sc">\\</span><span class="st">Users</span><span class="sc">\\</span><span class="st">Deniz</span><span class="sc">\\</span><span class="st">Documents</span><span class="sc">\\</span><span class="st">GitHub</span><span class="sc">\\</span><span class="st">Causal_Data_Science_Data</span><span class="sc">\\</span><span class="st">membership.rds"</span>)</span>
-<span id="cb1-7"><a href="#cb1-7"></a></span>
-<span id="cb1-8"><a href="#cb1-8"></a></span>
-<span id="cb1-9"><a href="#cb1-9"></a><span class="co"># Compute a Naive Estimate of Average Treatment Effect</span></span>
-<span id="cb1-10"><a href="#cb1-10"></a>naive_ate <span class="ot">&lt;-</span> <span class="fu">with</span>(data, <span class="fu">mean</span>(avg_purch[card <span class="sc">==</span> <span class="st">"Membership"</span>]) <span class="sc">-</span> <span class="fu">mean</span>(avg_purch[card <span class="sc">==</span> <span class="st">"NoMembership"</span>]))</span>
-<span id="cb1-11"><a href="#cb1-11"></a></span>
-<span id="cb1-12"><a href="#cb1-12"></a><span class="co"># Matching Methods:</span></span>
-<span id="cb1-13"><a href="#cb1-13"></a></span>
-<span id="cb1-14"><a href="#cb1-14"></a><span class="co"># (Coarsened) Exact Matching</span></span>
-<span id="cb1-15"><a href="#cb1-15"></a>coarsened_exact_data <span class="ot">&lt;-</span> <span class="fu">Match</span>(<span class="at">Y =</span> data<span class="sc">$</span>avg_purch, <span class="at">Tr =</span> data<span class="sc">$</span>card, <span class="at">X =</span> <span class="fu">cbind</span>(data<span class="sc">$</span>age, data<span class="sc">$</span>sex, data<span class="sc">$</span>pre_avg_purch))</span>
-<span id="cb1-16"><a href="#cb1-16"></a>coarsened_exact_ate <span class="ot">&lt;-</span> <span class="fu">mean</span>(data<span class="sc">$</span>avg_purch[coarsened_exact_data<span class="sc">$</span>index.treated]) <span class="sc">-</span> <span class="fu">mean</span>(data<span class="sc">$</span>avg_purch[coarsened_exact_data<span class="sc">$</span>index.control])</span>
-<span id="cb1-17"><a href="#cb1-17"></a></span>
-<span id="cb1-18"><a href="#cb1-18"></a><span class="co"># Nearest-Neighbor Matching</span></span>
-<span id="cb1-19"><a href="#cb1-19"></a>nn_match_data <span class="ot">&lt;-</span> <span class="fu">Match</span>(<span class="at">Y =</span> data<span class="sc">$</span>avg_purch, <span class="at">Tr =</span> data<span class="sc">$</span>card, <span class="at">X =</span> <span class="fu">cbind</span>(data<span class="sc">$</span>age, data<span class="sc">$</span>sex, data<span class="sc">$</span>pre_avg_purch), <span class="at">M=</span><span class="dv">1</span>)</span>
-<span id="cb1-20"><a href="#cb1-20"></a>nn_ate <span class="ot">&lt;-</span> <span class="fu">mean</span>(data<span class="sc">$</span>avg_purch[nn_match_data<span class="sc">$</span>index.treated]) <span class="sc">-</span> <span class="fu">mean</span>(data<span class="sc">$</span>avg_purch[nn_match_data<span class="sc">$</span>index.control])</span>
-<span id="cb1-21"><a href="#cb1-21"></a></span>
-<span id="cb1-22"><a href="#cb1-22"></a><span class="co"># Inverse Probability Weighting</span></span>
-<span id="cb1-23"><a href="#cb1-23"></a>ipw_model <span class="ot">&lt;-</span> <span class="fu">try</span>(<span class="fu">glm</span>(card <span class="sc">==</span> <span class="st">"Membership"</span> <span class="sc">~</span> age <span class="sc">+</span> sex <span class="sc">+</span> pre_avg_purch, <span class="at">family =</span> <span class="st">"binomial"</span>, <span class="at">data =</span> data), <span class="at">silent =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="07_matching_cache/html/unnamed-chunk-1_306c489035eacab4ba8795260ffae816">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dagitty)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggdag)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">readRDS</span>((<span class="st">"data/membership.rds"</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>dag_model <span class="ot">&lt;-</span> <span class="st">'dag {</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="st">bb="0,0,1,1"</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="st">age [pos="0.2,0.2"]</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="st">sex [pos="0.3,0.2"]</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="st">card [exposure,pos="0.3,0.6"]</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="st">avg_pur [outcome,pos="0.4,0.4"]</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="st">pre_avg_pur [pos="0.2,0.6"]</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="st">card -&gt; avg_pur</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="st">pre_avg_pur -&gt; Avg_purch</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="st">pre_avg_pur -&gt; card</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="st">age -&gt; card</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="st">age -&gt; pre_avg_pur</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="st">sex -&gt; card</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="st">sex -&gt; pre_avg_pur</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="st">'</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># draw DAG</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag_status</span>(dag_model) <span class="sc">+</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>, <span class="at">color =</span> <span class="st">"none"</span>) <span class="sc">+</span>  <span class="co"># Disable the legend</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_edges</span>(<span class="at">edge_color =</span> <span class="st">"black"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>#&gt; Warning: glm.fit: Algorithmus konvergierte nicht</code></pre>
+<pre><code>Warning: Removed 1 rows containing missing values (`geom_dag_point()`).</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="cf">if</span> (<span class="fu">length</span>(<span class="fu">class</span>(ipw_model)) <span class="sc">&gt;</span> <span class="dv">1</span> <span class="sc">&amp;&amp;</span> <span class="fu">class</span>(ipw_model)[<span class="dv">2</span>] <span class="sc">==</span> <span class="st">"try-error"</span>) {</span>
-<span id="cb3-2"><a href="#cb3-2"></a>  <span class="fu">cat</span>(<span class="st">"Warning: Logistic regression did not converge for Inverse Probability Weighting.</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb3-3"><a href="#cb3-3"></a>  ipw_ate <span class="ot">&lt;-</span> <span class="cn">NaN</span></span>
-<span id="cb3-4"><a href="#cb3-4"></a>} <span class="cf">else</span> {</span>
-<span id="cb3-5"><a href="#cb3-5"></a>  data<span class="sc">$</span>ipw_weights <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span><span class="fu">predict</span>(ipw_model, <span class="at">type =</span> <span class="st">"response"</span>)</span>
-<span id="cb3-6"><a href="#cb3-6"></a>  ipw_ate <span class="ot">&lt;-</span> <span class="fu">with</span>(data, <span class="fu">mean</span>(ipw_weights <span class="sc">*</span> avg_purch[card <span class="sc">==</span> <span class="st">"Membership"</span>]) <span class="sc">-</span> <span class="fu">mean</span>(ipw_weights <span class="sc">*</span> avg_purch[card <span class="sc">==</span> <span class="st">"NoMembership"</span>]))</span>
-<span id="cb3-7"><a href="#cb3-7"></a>}</span>
-<span id="cb3-8"><a href="#cb3-8"></a></span>
-<span id="cb3-9"><a href="#cb3-9"></a><span class="co"># Print results</span></span>
-<span id="cb3-10"><a href="#cb3-10"></a><span class="fu">cat</span>(<span class="st">"Naive ATE:"</span>, naive_ate, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; Naive ATE: NaN</code></pre>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 rows containing missing values (`geom_dag_text()`).</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">cat</span>(<span class="st">"(Coarsened) Exact Matching ATE:"</span>, coarsened_exact_ate, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; (Coarsened) Exact Matching ATE: 14.65687</code></pre>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="07_matching_files/figure-html/unnamed-chunk-1-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="07_matching_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">cat</span>(<span class="st">"Nearest-Neighbor Matching ATE:"</span>, nn_ate, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; Nearest-Neighbor Matching ATE: 14.65687</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">cat</span>(<span class="st">"Inverse Probability Weighting ATE:"</span>, ipw_ate, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="07_matching_cache/html/unnamed-chunk-2_ad5ac23e7f6abb737a281b9f276f51e6">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Matching)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Load your data</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/membership.rds"</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Assignment 2: Linear Regression Model</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>model_linear <span class="ot">&lt;-</span> <span class="fu">lm</span>(avg_purch <span class="sc">~</span> card, <span class="at">data =</span> data)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_linear)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>#&gt; Inverse Probability Weighting ATE: NaN</code></pre>
+<pre><code>
+Call:
+lm(formula = avg_purch ~ card, data = data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-101.515  -20.684   -0.199   20.424  120.166 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  65.9397     0.3965  166.29   &lt;2e-16 ***
+card         25.2195     0.6095   41.38   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 30.11 on 9998 degrees of freedom
+Multiple R-squared:  0.1462,    Adjusted R-squared:  0.1461 
+F-statistic:  1712 on 1 and 9998 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assignment 3: Causal Inference Analysis</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>cem_match <span class="ot">&lt;-</span> <span class="fu">matchit</span>(card <span class="sc">~</span> pre_avg_purch <span class="sc">+</span> age <span class="sc">+</span> sex,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> data,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method =</span> <span class="st">'cem'</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">estimand =</span> <span class="st">'ATE'</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>data_cem <span class="ot">&lt;-</span> <span class="fu">match.data</span>(cem_match)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>model_cem <span class="ot">&lt;-</span> <span class="fu">lm</span>(avg_purch <span class="sc">~</span> card, <span class="at">data =</span> data_cem, <span class="at">weights =</span> weights)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_cem)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = avg_purch ~ card, data = data_cem, weights = weights)
+
+Weighted Residuals:
+     Min       1Q   Median       3Q      Max 
+-159.349  -20.459   -0.151   19.863  161.528 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  69.9896     0.3984  175.66   &lt;2e-16 ***
+card         15.2043     0.6137   24.77   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 30.12 on 9878 degrees of freedom
+Multiple R-squared:  0.0585,    Adjusted R-squared:  0.0584 
+F-statistic: 613.7 on 1 and 9878 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>nn_match <span class="ot">&lt;-</span> <span class="fu">matchit</span>(card <span class="sc">~</span> pre_avg_purch <span class="sc">+</span> age <span class="sc">+</span> sex,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> data,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">method =</span> <span class="st">"nearest"</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">distance =</span> <span class="st">"mahalanobis"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>data_nn <span class="ot">&lt;-</span> <span class="fu">match.data</span>(nn_match)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>model_nn <span class="ot">&lt;-</span> <span class="fu">lm</span>(pre_avg_purch <span class="sc">~</span> card, <span class="at">data =</span> data_nn, <span class="at">weights =</span> weights)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_nn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = pre_avg_purch ~ card, data = data_nn, weights = weights)
+
+Weighted Residuals:
+    Min      1Q  Median      3Q     Max 
+-85.464 -19.097  -1.866  16.325 124.497 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  76.2937     0.5065 150.616   &lt;2e-16 ***
+card          0.1001     0.6472   0.155    0.877    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 26.21 on 6907 degrees of freedom
+Multiple R-squared:  3.462e-06, Adjusted R-squared:  -0.0001413 
+F-statistic: 0.02391 on 1 and 6907 DF,  p-value: 0.8771</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>propensity_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(card <span class="sc">~</span> pre_avg_purch <span class="sc">+</span> age <span class="sc">+</span> sex,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">data =</span> data,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>data_augmented <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">propensity_score =</span> <span class="fu">predict</span>(propensity_model, <span class="at">type =</span> <span class="st">"response"</span>))</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>data_ipw <span class="ot">&lt;-</span> data_augmented <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ipw_score =</span> (card <span class="sc">/</span> propensity_score) <span class="sc">+</span> ((<span class="dv">1</span> <span class="sc">-</span> card) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> propensity_score))</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>model_ipw <span class="ot">&lt;-</span> <span class="fu">lm</span>(avg_purch <span class="sc">~</span> card, <span class="at">data =</span> data_ipw, <span class="at">weights =</span> ipw_score)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_ipw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = avg_purch ~ card, data = data_ipw, weights = ipw_score)
+
+Weighted Residuals:
+     Min       1Q   Median       3Q      Max 
+-205.353  -28.995   -0.275   28.787  214.307 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  70.2628     0.4320  162.66   &lt;2e-16 ***
+card         14.9573     0.6109   24.48   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 43.19 on 9998 degrees of freedom
+Multiple R-squared:  0.05657,   Adjusted R-squared:  0.05647 
+F-statistic: 599.5 on 1 and 9998 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>model_ipw_trim <span class="ot">&lt;-</span> <span class="fu">lm</span>(avg_purch <span class="sc">~</span> card,</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> data_ipw <span class="sc">%&gt;%</span> <span class="fu">filter</span>(propensity_score <span class="sc">%&gt;%</span> <span class="fu">between</span>(<span class="fl">0.15</span>, <span class="fl">0.85</span>)),</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">weights =</span> ipw_score)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_ipw_trim)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = avg_purch ~ card, data = data_ipw %&gt;% filter(propensity_score %&gt;% 
+    between(0.15, 0.85)), weights = ipw_score)
+
+Weighted Residuals:
+     Min       1Q   Median       3Q      Max 
+-205.353  -28.995   -0.275   28.787  214.307 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  70.2628     0.4320  162.66   &lt;2e-16 ***
+card         14.9573     0.6109   24.48   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 43.19 on 9998 degrees of freedom
+Multiple R-squared:  0.05657,   Adjusted R-squared:  0.05647 
+F-statistic: 599.5 on 1 and 9998 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>model_summary <span class="ot">&lt;-</span> modelsummary<span class="sc">::</span><span class="fu">modelsummary</span>(<span class="fu">list</span>(<span class="st">"Naive"</span> <span class="ot">=</span> model_linear,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                                                 <span class="st">"CEM"</span> <span class="ot">=</span> model_cem,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                                                 <span class="st">"NN"</span> <span class="ot">=</span> model_nn,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                                                 <span class="st">"IPW1"</span> <span class="ot">=</span> model_ipw,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                                                 <span class="st">"IPW2"</span> <span class="ot">=</span> model_ipw_trim))</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>model_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Naive</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">CEM</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">NN</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;IPW1</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;IPW2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: center;">65.940</td>
+<td style="text-align: center;">69.990</td>
+<td style="text-align: center;">76.294</td>
+<td style="text-align: center;">70.263</td>
+<td style="text-align: center;">70.263</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: center;">(0.397)</td>
+<td style="text-align: center;">(0.398)</td>
+<td style="text-align: center;">(0.507)</td>
+<td style="text-align: center;">(0.432)</td>
+<td style="text-align: center;">(0.432)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">card</td>
+<td style="text-align: center;">25.220</td>
+<td style="text-align: center;">15.204</td>
+<td style="text-align: center;">0.100</td>
+<td style="text-align: center;">14.957</td>
+<td style="text-align: center;">14.957</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; box-shadow: 0px 1.5px;"></td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">(0.610)</td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">(0.614)</td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">(0.647)</td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">(0.611)</td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">(0.611)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Num.Obs.</td>
+<td style="text-align: center;">10000</td>
+<td style="text-align: center;">9880</td>
+<td style="text-align: center;">6909</td>
+<td style="text-align: center;">10000</td>
+<td style="text-align: center;">10000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">R2</td>
+<td style="text-align: center;">0.146</td>
+<td style="text-align: center;">0.058</td>
+<td style="text-align: center;">0.000</td>
+<td style="text-align: center;">0.057</td>
+<td style="text-align: center;">0.057</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">R2 Adj.</td>
+<td style="text-align: center;">0.146</td>
+<td style="text-align: center;">0.058</td>
+<td style="text-align: center;">0.000</td>
+<td style="text-align: center;">0.056</td>
+<td style="text-align: center;">0.056</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">AIC</td>
+<td style="text-align: center;">96483.2</td>
+<td style="text-align: center;">95595.0</td>
+<td style="text-align: center;">65071.1</td>
+<td style="text-align: center;">97072.1</td>
+<td style="text-align: center;">97072.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BIC</td>
+<td style="text-align: center;">96504.8</td>
+<td style="text-align: center;">95616.6</td>
+<td style="text-align: center;">65091.6</td>
+<td style="text-align: center;">97093.7</td>
+<td style="text-align: center;">97093.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Log.Lik.</td>
+<td style="text-align: center;">-48238.590</td>
+<td style="text-align: center;">-47794.497</td>
+<td style="text-align: center;">-32532.552</td>
+<td style="text-align: center;">-48533.031</td>
+<td style="text-align: center;">-48533.031</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RMSE</td>
+<td style="text-align: center;">30.11</td>
+<td style="text-align: center;">30.08</td>
+<td style="text-align: center;">26.07</td>
+<td style="text-align: center;">30.54</td>
+<td style="text-align: center;">30.54</td>
+</tr>
+</tbody>
+</table>
+
+
 </div>
 </div>
 
@@ -619,6 +858,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","descPosition":"bottom","openEffect":"zoom","loop":true,"closeEffect":"zoom"});</script>
 
 
 

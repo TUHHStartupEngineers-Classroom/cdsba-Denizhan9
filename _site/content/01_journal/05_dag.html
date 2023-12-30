@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Oliver Mork">
 
 <title>MyLabJournal - Directed Acyclic Graphs</title>
 <style>
@@ -101,13 +100,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-<link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-
 
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -187,9 +183,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    </div>
+    
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -202,12 +196,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Oliver Mork </p>
-          </div>
-  </div>
     
   
     
@@ -217,83 +205,112 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 <p>##Assignment</p>
-<div class="cell" data-hash="05_dag_cache/html/unnamed-chunk-1_85f49365d911bcae8be9846f8d90cf94">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Load necessary libraries</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">library</span>(dagitty)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>#&gt; Warning: Paket 'dagitty' wurde unter R Version 4.3.2 erstellt</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># Load the data</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a>data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"C:</span><span class="sc">\\</span><span class="st">Users</span><span class="sc">\\</span><span class="st">Deniz</span><span class="sc">\\</span><span class="st">Documents</span><span class="sc">\\</span><span class="st">GitHub</span><span class="sc">\\</span><span class="st">Causal_Data_Science_Data</span><span class="sc">\\</span><span class="st">customer_sat.rds"</span>)</span>
-<span id="cb3-3"><a href="#cb3-3"></a></span>
-<span id="cb3-4"><a href="#cb3-4"></a><span class="co"># Explore the data</span></span>
-<span id="cb3-5"><a href="#cb3-5"></a><span class="fu">head</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="05_dag_cache/html/unnamed-chunk-1_b018a68644ffa0be738dfda155202587">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dagitty)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggdag)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>dag <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  X <span class="sc">~</span> Z,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  Y <span class="sc">~</span> Z,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  Y <span class="sc">~</span> X,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="at">Y =</span> <span class="dv">3</span>, <span class="at">Z =</span> <span class="dv">2</span>, <span class="at">X =</span> <span class="dv">1</span>),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">y =</span> <span class="fu">c</span>(<span class="at">Y =</span> <span class="dv">0</span>, <span class="at">Z =</span> <span class="dv">1</span>, <span class="at">X =</span> <span class="dv">0</span>)),</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">labels =</span> <span class="fu">list</span>(<span class="at">X =</span> <span class="st">"Parking spots"</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">Y =</span> <span class="st">"Sales"</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">Z =</span> <span class="st">"Customers"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot DAG</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag</span>(dag) <span class="sc">+</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_text</span>(<span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_edges</span>(<span class="at">edge_color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_label_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> label))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="05_dag_files/figure-html/unnamed-chunk-1-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="05_dag_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-hash="05_dag_cache/html/unnamed-chunk-2_a3f112b7650ae748fb14eb3edf96cb02">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dagitty)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"C:</span><span class="sc">\\</span><span class="st">Users</span><span class="sc">\\</span><span class="st">Deniz</span><span class="sc">\\</span><span class="st">Documents</span><span class="sc">\\</span><span class="st">GitHub</span><span class="sc">\\</span><span class="st">Causal_Data_Science_Data</span><span class="sc">\\</span><span class="st">customer_sat.rds"</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Explore the data</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  follow_ups satisfaction subscription
+       &lt;dbl&gt;        &lt;dbl&gt; &lt;chr&gt;       
+1          8           40 Elite       
+2          7           45 Elite       
+3          8           47 Elite       
+4          9           44 Elite       
+5         10           50 Elite       
+6          6           55 Premium+    </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   follow_ups      satisfaction   subscription      
+ Min.   : 0.000   Min.   :40.00   Length:15         
+ 1st Qu.: 2.500   1st Qu.:48.50   Class :character  
+ Median : 7.000   Median :60.00   Mode  :character  
+ Mean   : 5.667   Mean   :60.13                     
+ 3rd Qu.: 8.000   3rd Qu.:72.00                     
+ Max.   :10.000   Max.   :80.00                     </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Regression without accounting for subscription</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(satisfaction <span class="sc">~</span> follow_ups, <span class="at">data =</span> data)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = satisfaction ~ follow_ups, data = data)
 
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["follow_ups"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["satisfaction"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["subscription"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"8","2":"40","3":"Elite"},{"1":"7","2":"45","3":"Elite"},{"1":"8","2":"47","3":"Elite"},{"1":"9","2":"44","3":"Elite"},{"1":"10","2":"50","3":"Elite"},{"1":"6","2":"55","3":"Premium+"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-12.412  -5.257   1.733   4.506  12.588 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  78.8860     4.2717  18.467 1.04e-10 ***
+follow_ups   -3.3093     0.6618  -5.001 0.000243 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 7.923 on 13 degrees of freedom
+Multiple R-squared:  0.658, Adjusted R-squared:  0.6316 
+F-statistic: 25.01 on 1 and 13 DF,  p-value: 0.0002427</code></pre>
 </div>
-</div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">summary</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Regression accounting for subscription</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(satisfaction <span class="sc">~</span> follow_ups <span class="sc">+</span> subscription, <span class="at">data =</span> data)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>#&gt;    follow_ups      satisfaction   subscription      
-#&gt;  Min.   : 0.000   Min.   :40.00   Length:15         
-#&gt;  1st Qu.: 2.500   1st Qu.:48.50   Class :character  
-#&gt;  Median : 7.000   Median :60.00   Mode  :character  
-#&gt;  Mean   : 5.667   Mean   :60.13                     
-#&gt;  3rd Qu.: 8.000   3rd Qu.:72.00                     
-#&gt;  Max.   :10.000   Max.   :80.00</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Regression without accounting for subscription</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(satisfaction <span class="sc">~</span> follow_ups, <span class="at">data =</span> data)</span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="fu">summary</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; 
-#&gt; Call:
-#&gt; lm(formula = satisfaction ~ follow_ups, data = data)
-#&gt; 
-#&gt; Residuals:
-#&gt;     Min      1Q  Median      3Q     Max 
-#&gt; -12.412  -5.257   1.733   4.506  12.588 
-#&gt; 
-#&gt; Coefficients:
-#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    
-#&gt; (Intercept)  78.8860     4.2717  18.467 1.04e-10 ***
-#&gt; follow_ups   -3.3093     0.6618  -5.001 0.000243 ***
-#&gt; ---
-#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-#&gt; 
-#&gt; Residual standard error: 7.923 on 13 degrees of freedom
-#&gt; Multiple R-squared:  0.658,  Adjusted R-squared:  0.6316 
-#&gt; F-statistic: 25.01 on 1 and 13 DF,  p-value: 0.0002427</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Regression accounting for subscription</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(satisfaction <span class="sc">~</span> follow_ups <span class="sc">+</span> subscription, <span class="at">data =</span> data)</span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="fu">summary</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; 
-#&gt; Call:
-#&gt; lm(formula = satisfaction ~ follow_ups + subscription, data = data)
-#&gt; 
-#&gt; Residuals:
-#&gt;     Min      1Q  Median      3Q     Max 
-#&gt; -4.3222 -2.1972  0.3167  2.2667  3.9944 
-#&gt; 
-#&gt; Coefficients:
-#&gt;                      Estimate Std. Error t value Pr(&gt;|t|)    
-#&gt; (Intercept)           26.7667     6.6804   4.007  0.00206 ** 
-#&gt; follow_ups             2.1944     0.7795   2.815  0.01682 *  
-#&gt; subscriptionPremium   44.7222     5.6213   7.956 6.88e-06 ***
-#&gt; subscriptionPremium+  18.0722     2.1659   8.344 4.37e-06 ***
-#&gt; ---
-#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-#&gt; 
-#&gt; Residual standard error: 2.958 on 11 degrees of freedom
-#&gt; Multiple R-squared:  0.9597, Adjusted R-squared:  0.9487 
-#&gt; F-statistic: 87.21 on 3 and 11 DF,  p-value: 5.956e-08</code></pre>
+<pre><code>
+Call:
+lm(formula = satisfaction ~ follow_ups + subscription, data = data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.3222 -2.1972  0.3167  2.2667  3.9944 
+
+Coefficients:
+                     Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)           26.7667     6.6804   4.007  0.00206 ** 
+follow_ups             2.1944     0.7795   2.815  0.01682 *  
+subscriptionPremium   44.7222     5.6213   7.956 6.88e-06 ***
+subscriptionPremium+  18.0722     2.1659   8.344 4.37e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.958 on 11 degrees of freedom
+Multiple R-squared:  0.9597,    Adjusted R-squared:  0.9487 
+F-statistic: 87.21 on 3 and 11 DF,  p-value: 5.956e-08</code></pre>
 </div>
 </div>
 <p>Model 1:</p>
@@ -305,22 +322,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In the model without accounting for subscription (model1), the negative coefficient for follow-up calls suggests that more follow-up calls are associated with lower satisfaction. However, this might be confounded by the type of subscription.</p>
 <p>In the model accounting for subscription (model2), the positive coefficient for follow-up calls suggests that, after accounting for subscription type, more follow-up calls are associated with higher satisfaction.</p>
 <p>The positive coefficients for the “Premium” and “Premium+” subscription levels suggest that clients with these subscriptions tend to report higher satisfaction compared to the reference level.</p>
-<div class="cell" data-hash="05_dag_cache/html/unnamed-chunk-2_6d766e43328eac98a19f8bee5f2639b4">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Plot the data</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> follow_ups, <span class="at">y =</span> satisfaction, <span class="at">color =</span> subscription)) <span class="sc">+</span></span>
-<span id="cb10-3"><a href="#cb10-3"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb10-4"><a href="#cb10-4"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb10-5"><a href="#cb10-5"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Relationship Between Follow-up Calls and Satisfaction"</span>,</span>
-<span id="cb10-6"><a href="#cb10-6"></a>       <span class="at">x =</span> <span class="st">"Number of Follow-up Calls"</span>,</span>
-<span id="cb10-7"><a href="#cb10-7"></a>       <span class="at">y =</span> <span class="st">"Satisfaction"</span>) <span class="sc">+</span></span>
-<span id="cb10-8"><a href="#cb10-8"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="05_dag_cache/html/unnamed-chunk-3_f7b941e7d0361e29dea8c1f5bd238552">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the data</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> follow_ups, <span class="at">y =</span> satisfaction, <span class="at">color =</span> subscription)) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Relationship Between Follow-up Calls and Satisfaction"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Number of Follow-up Calls"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Satisfaction"</span>) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>#&gt; `geom_smooth()` using formula = 'y ~ x'</code></pre>
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="05_dag_files/figure-html/unnamed-chunk-2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="05_dag_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="05_dag_files/figure-html/unnamed-chunk-3-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="05_dag_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -678,7 +695,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","loop":true,"closeEffect":"zoom","descPosition":"bottom","selector":".lightbox"});</script>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","selector":".lightbox","openEffect":"zoom","descPosition":"bottom","loop":true});</script>
 
 
 

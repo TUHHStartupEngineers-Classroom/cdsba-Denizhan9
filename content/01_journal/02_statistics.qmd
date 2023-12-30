@@ -4,6 +4,8 @@ title: "Statistical Concepts"
 
 #Assingment
 ```{r}
+library(magrittr) 
+library(dplyr) 
 random_vars <- readRDS("data/random_vars.rds")
 
 View(random_vars)
@@ -16,22 +18,22 @@ mean_var2 <- mean(random_vars$income)
 variance_var2 <- var(random_vars$income)
 std_var2 <- sd(random_vars$income)
 
-##
-mean_var1
-variance_var1
-std_var1
-mean_var2
-variance_var2
-std_var2
-##
+print(mean_var1)
+print(variance_var1)
+print(std_var1)
+      
+print(mean_var2)
+print(variance_var2)
+print(std_var2)
+
 
 covariance <- cov(random_vars$age, random_vars$income)
 correlation <- cor(random_vars$age, random_vars$income)
 
-##
-covariance
-correlation
-##
+print("covariance")
+print(covariance)
+print("correlation")
+print(correlation)
 
 df_sub18 <- subset(random_vars, age >= 18)
 df_sub18_65 <- subset(random_vars, age >= 18 & age <= 65)

@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Oliver Mork">
 
 <title>MyLabJournal - Difference-in-Differences</title>
 <style>
@@ -20,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -67,7 +100,7 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -147,9 +180,7 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    </div>
+    
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -162,12 +193,6 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Oliver Mork </p>
-          </div>
-  </div>
     
   
     
@@ -176,19 +201,157 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<div class="cell" data-hash="08_did_cache/html/unnamed-chunk-1_d4c9d412ae3d6efc8337a44f4c7ec097">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/hospdd.rds"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [7,368 × 5] (S3: tbl_df/tbl/data.frame)
+ $ hospital : num [1:7368] 1 1 1 1 1 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "Hospital ID"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ frequency: 'int' num [1:7368] 3 2 4 2 1 1 2 4 2 2 ...
+  ..- attr(*, "label")= chr "Hospital visit frequency"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+  ..- attr(*, "labels")= Named num [1:4] 1 2 3 4
+  .. ..- attr(*, "names")= chr [1:4] "Low" "Medium" "High" "Very high"
+ $ month    : 'int' num [1:7368] 7 3 2 4 3 7 4 1 3 1 ...
+  ..- attr(*, "label")= chr "Month"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+  ..- attr(*, "labels")= Named num [1:7] 1 2 3 4 5 6 7
+  .. ..- attr(*, "names")= chr [1:7] "January" "February" "March" "April" ...
+ $ procedure: 'dbl' num [1:7368] 1 0 0 1 0 1 1 0 0 0 ...
+  ..- attr(*, "label")= chr "Admission procedure"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+  ..- attr(*, "labels")= Named num [1:2] 0 1
+  .. ..- attr(*, "names")= chr [1:2] "Old" "New"
+ $ satis    : num [1:7368] 4.11 3.32 3.41 3 3.11 ...
+  ..- attr(*, "label")= chr "Patient satisfaction score"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ - attr(*, "label")= chr "Artificial hospital admission procedure data"</code></pre>
 </div>
-<div class="callout-title-container flex-fill">
-Note
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select the hospitals for which the new admission procedure will be applied</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>new_procedure_hospitals <span class="ot">&lt;-</span> <span class="fu">unique</span>(df<span class="sc">$</span>hospital[df<span class="sc">$</span>procedure <span class="sc">==</span> <span class="dv">1</span>])</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>new_procedure_hospitals</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>treated_data <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(hospital <span class="sc">%in%</span> new_procedure_hospitals)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>mean_satisfaction_tb <span class="ot">&lt;-</span> treated_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(month <span class="sc">==</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">mean_satisfaction_tb =</span> <span class="fu">mean</span>(satis, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(mean_satisfaction_tb)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>mean_satisfaction_ta <span class="ot">&lt;-</span> treated_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(month <span class="sc">==</span> <span class="dv">4</span>) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">mean_satisfaction_ta =</span> <span class="fu">mean</span>(satis, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(mean_satisfaction_ta)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>control_data <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span>hospital <span class="sc">%in%</span> new_procedure_hospitals)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>mean_satisfaction_cb <span class="ot">&lt;-</span> control_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(month <span class="sc">==</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">mean_satisfaction_cb =</span> <span class="fu">mean</span>(satis, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(mean_satisfaction_cb)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>mean_satisfaction_ca <span class="ot">&lt;-</span> control_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(month <span class="sc">==</span> <span class="dv">4</span>) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">mean_satisfaction_ca =</span> <span class="fu">mean</span>(satis, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(mean_satisfaction_ca)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>DiD_estimate_b <span class="ot">&lt;-</span> mean_satisfaction_ta <span class="sc">-</span> mean_satisfaction_cb</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>DiD_estimate_a <span class="ot">&lt;-</span> mean_satisfaction_tb <span class="sc">-</span> mean_satisfaction_ca</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>DiD <span class="ot">&lt;-</span> DiD_estimate_a <span class="sc">-</span> DiD_estimate_b</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Estimated DiD: "</span>, DiD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Estimated DiD:  -0.7932465</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(satis <span class="sc">~</span> procedure <span class="sc">+</span> month <span class="sc">+</span> hospital, <span class="at">data =</span> df)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = satis ~ procedure + month + hospital, data = df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.3126 -0.6548 -0.0933  0.5555  5.3347 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  3.538024   0.031365 112.801  &lt; 2e-16 ***
+procedure    0.886120   0.039143  22.638  &lt; 2e-16 ***
+month       -0.004965   0.006392  -0.777 0.437378    
+hospital    -0.003731   0.001043  -3.576 0.000351 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.9836 on 7364 degrees of freedom
+Multiple R-squared:  0.1325,    Adjusted R-squared:  0.1321 
+F-statistic: 374.8 on 3 and 7364 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(satis <span class="sc">~</span> procedure <span class="sc">+</span> <span class="fu">as.factor</span>(month) <span class="sc">+</span> <span class="fu">as.factor</span>(hospital), <span class="at">data =</span> df)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = satis ~ procedure + as.factor(month) + as.factor(hospital), 
+    data = df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.1880 -0.4644  0.0067  0.4539  4.2921 
+
+Coefficients:
+                        Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)            3.1716566  0.0562207  56.414  &lt; 2e-16 ***
+procedure              0.8479879  0.0342191  24.781  &lt; 2e-16 ***
+as.factor(month)2     -0.0096077  0.0292119  -0.329 0.742244    
+as.factor(month)3      0.0219686  0.0292119   0.752 0.452050    
+as.factor(month)4     -0.0032839  0.0324936  -0.101 0.919504    
+as.factor(month)5     -0.0094027  0.0324936  -0.289 0.772305    
+as.factor(month)6     -0.0038375  0.0324936  -0.118 0.905990    
+as.factor(month)7     -0.0111941  0.0324936  -0.345 0.730478    
+as.factor(hospital)2   0.4085664  0.0772418   5.289 1.26e-07 ***
+as.factor(hospital)3   0.5336248  0.0793384   6.726 1.88e-11 ***
+as.factor(hospital)4   0.2275102  0.0739411   3.077 0.002099 ** 
+as.factor(hospital)5  -0.1453529  0.0739411  -1.966 0.049360 *  
+as.factor(hospital)6   0.4478634  0.0739411   6.057 1.46e-09 ***
+as.factor(hospital)7   1.4044164  0.0714559  19.654  &lt; 2e-16 ***
+as.factor(hospital)8   0.0718758  0.0763186   0.942 0.346333    
+as.factor(hospital)9  -1.5185150  0.0782447 -19.407  &lt; 2e-16 ***
+as.factor(hospital)10  1.6828446  0.0772418  21.787  &lt; 2e-16 ***
+as.factor(hospital)11  0.2209653  0.0763186   2.895 0.003799 ** 
+as.factor(hospital)12 -0.0953034  0.0782447  -1.218 0.223256    
+as.factor(hospital)13  0.4955931  0.0754658   6.567 5.48e-11 ***
+as.factor(hospital)14  0.2330426  0.0793384   2.937 0.003321 ** 
+as.factor(hospital)15 -0.1444935  0.0793384  -1.821 0.068613 .  
+as.factor(hospital)16  1.4142680  0.0772418  18.310  &lt; 2e-16 ***
+as.factor(hospital)17  0.4235429  0.0805362   5.259 1.49e-07 ***
+as.factor(hospital)18  0.1532761  0.0938164   1.634 0.102346    
+as.factor(hospital)19 -0.7453017  0.0811623  -9.183  &lt; 2e-16 ***
+as.factor(hospital)20  0.0473874  0.0791140   0.599 0.549207    
+as.factor(hospital)21  1.1943370  0.0836232  14.282  &lt; 2e-16 ***
+as.factor(hospital)22  0.7993153  0.0823336   9.708  &lt; 2e-16 ***
+as.factor(hospital)23  0.7017202  0.0811623   8.646  &lt; 2e-16 ***
+as.factor(hospital)24 -0.3081260  0.0866402  -3.556 0.000378 ***
+as.factor(hospital)25  0.6464736  0.0927258   6.972 3.40e-12 ***
+as.factor(hospital)26  0.2142471  0.0791140   2.708 0.006783 ** 
+as.factor(hospital)27 -0.3986544  0.0766106  -5.204 2.01e-07 ***
+as.factor(hospital)28  0.7119953  0.0836232   8.514  &lt; 2e-16 ***
+as.factor(hospital)29  0.2485512  0.0800935   3.103 0.001921 ** 
+as.factor(hospital)30 -0.1679220  0.0953638  -1.761 0.078304 .  
+as.factor(hospital)31  0.5120848  0.0791140   6.473 1.02e-10 ***
+as.factor(hospital)32 -0.3233456  0.0800935  -4.037 5.47e-05 ***
+as.factor(hospital)33 -0.4539752  0.0791140  -5.738 9.95e-09 ***
+as.factor(hospital)34 -0.0004123  0.0746054  -0.006 0.995590    
+as.factor(hospital)35  0.3541110  0.0766106   4.622 3.86e-06 ***
+as.factor(hospital)36  2.1381425  0.0773811  27.631  &lt; 2e-16 ***
+as.factor(hospital)37  0.1404036  0.0927258   1.514 0.130023    
+as.factor(hospital)38 -0.0868060  0.0782129  -1.110 0.267093    
+as.factor(hospital)39 -0.0234969  0.0823336  -0.285 0.775356    
+as.factor(hospital)40  1.1215331  0.0782129  14.339  &lt; 2e-16 ***
+as.factor(hospital)41 -0.1497346  0.0766106  -1.954 0.050681 .  
+as.factor(hospital)42  0.8811369  0.0850508  10.360  &lt; 2e-16 ***
+as.factor(hospital)43 -0.7724325  0.0811623  -9.517  &lt; 2e-16 ***
+as.factor(hospital)44  0.0344120  0.0904337   0.381 0.703569    
+as.factor(hospital)45 -0.2137495  0.0766106  -2.790 0.005283 ** 
+as.factor(hospital)46  0.0784915  0.0823336   0.953 0.340452    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.7238 on 7315 degrees of freedom
+Multiple R-squared:  0.5333,    Adjusted R-squared:  0.5299 
+F-statistic: 160.7 on 52 and 7315 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
-<div class="callout-body-container callout-body">
-<p>You can delete everything in here and start fresh.</p>
-</div>
-</div>
+<p>The main difference between including variables directly and as factors is how they are treated. When treated as factors, each unique value or level of the variable is considered a separate category. This means that for each hospital or month, different effects can be observed individually.</p>
 
 
 
