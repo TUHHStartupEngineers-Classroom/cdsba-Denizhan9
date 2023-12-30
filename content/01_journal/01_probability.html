@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Oliver Mork">
 
 <title>MyLabJournal - Probability Theory</title>
 <style>
@@ -98,13 +97,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-<link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-
 
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -184,17 +180,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Contents</h2>
-   
-  <ul class="collapse">
-  <li><a href="#assingment-1" id="toc-assingment-1" class="nav-link active" data-scroll-target="#assingment-1"><span class="header-section-number">1</span> Assingment 1</a></li>
-  <li><a href="#assingment-2" id="toc-assingment-2" class="nav-link" data-scroll-target="#assingment-2"><span class="header-section-number">2</span> Assingment 2</a></li>
-  <li><a href="#assingment-3" id="toc-assingment-3" class="nav-link" data-scroll-target="#assingment-3"><span class="header-section-number">3</span> Assingment 3</a></li>
-  </ul>
-</nav>
-    </div>
+    
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -207,12 +193,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Oliver Mork </p>
-          </div>
-  </div>
     
   
     
@@ -221,62 +201,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>You can delete everything in here and start fresh.</p>
-</div>
-</div>
-<p>This is a <code>.qmd</code> file. It is plain text with special features. Any time you write just like this, it will be compiled to normal text in the website. If you put a # in front of your text, it will create a top level-header.</p>
-<p>To learn more about Quarto websites visit <a href="https://quarto.org/docs/websites" class="uri">https://quarto.org/docs/websites</a>.</p>
-<section id="assingment-1" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Assingment 1</h1>
-<div class="cell" data-hash="01_probability_cache/html/unnamed-chunk-1_ad571d85b312afe63fe3e5b1e8acc198">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>T_scope_on_time<span class="ot">&lt;-</span><span class="fl">0.2</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a>T_scope_not_time<span class="ot">&lt;-</span><span class="fl">0.8</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a>T_on_time<span class="ot">&lt;-</span><span class="fl">0.6</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a>T_not_time<span class="ot">&lt;-</span><span class="fl">0.4</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a>P_scope<span class="ot">&lt;-</span><span class="fl">0.3</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a>P_no_scope<span class="ot">&lt;-</span><span class="fl">0.7</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a></span>
-<span id="cb1-8"><a href="#cb1-8"></a>P_T_S<span class="ot">&lt;-</span>P_scope<span class="sc">*</span>T_scope_on_time</span>
-<span id="cb1-9"><a href="#cb1-9"></a>P_T_nS<span class="ot">&lt;-</span>P_no_scope<span class="sc">*</span>T_on_time</span>
-<span id="cb1-10"><a href="#cb1-10"></a>P_nT_S<span class="ot">&lt;-</span>P_scope<span class="sc">*</span>T_scope_not_time</span>
-<span id="cb1-11"><a href="#cb1-11"></a>P_nT_nS<span class="ot">&lt;-</span>P_no_scope<span class="sc">*</span>T_not_time</span>
-<span id="cb1-12"><a href="#cb1-12"></a></span>
-<span id="cb1-13"><a href="#cb1-13"></a>P_T_S</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="assingment-1" class="level1">
+<h1>Assingment 1</h1>
+<div class="cell" data-hash="01_probability_cache/html/unnamed-chunk-1_4023c602cafb816db365c84592b652dc">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>T_scope_on_time<span class="ot">&lt;-</span><span class="fl">0.2</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>T_scope_not_time<span class="ot">&lt;-</span><span class="fl">0.8</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>T_on_time<span class="ot">&lt;-</span><span class="fl">0.6</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>T_not_time<span class="ot">&lt;-</span><span class="fl">0.4</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>P_scope<span class="ot">&lt;-</span><span class="fl">0.3</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>P_no_scope<span class="ot">&lt;-</span><span class="fl">0.7</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>P_T_S<span class="ot">&lt;-</span>P_scope<span class="sc">*</span>T_scope_on_time</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>P_T_nS<span class="ot">&lt;-</span>P_no_scope<span class="sc">*</span>T_on_time</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>P_nT_S<span class="ot">&lt;-</span>P_scope<span class="sc">*</span>T_scope_not_time</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>P_nT_nS<span class="ot">&lt;-</span>P_no_scope<span class="sc">*</span>T_not_time</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>P_T_S</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] 0.06</code></pre>
+<pre><code>[1] 0.06</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>P_T_nS</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>P_T_nS</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] 0.42</code></pre>
+<pre><code>[1] 0.42</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>P_nT_S</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>P_nT_S</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] 0.24</code></pre>
+<pre><code>[1] 0.24</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>P_nT_nS</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>P_nT_nS</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] 0.28</code></pre>
+<pre><code>[1] 0.28</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>sum_P<span class="ot">&lt;-</span>P_T_S<span class="sc">+</span>P_T_nS<span class="sc">+</span>P_nT_S<span class="sc">+</span>P_nT_nS</span>
-<span id="cb9-2"><a href="#cb9-2"></a></span>
-<span id="cb9-3"><a href="#cb9-3"></a>sum_P</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sum_P<span class="ot">&lt;-</span>P_T_S<span class="sc">+</span>P_T_nS<span class="sc">+</span>P_nT_S<span class="sc">+</span>P_nT_nS</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>sum_P</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] 1</code></pre>
+<pre><code>[1] 1</code></pre>
 </div>
 </div>
 </section>
-<section id="assingment-2" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Assingment 2</h1>
+<section id="assingment-2" class="level1">
+<h1>Assingment 2</h1>
 <p>What is the percentage of customers using all three devices?</p>
 <p>0.5%</p>
 <p>What is the percentage of customers using at least two devices?</p>
@@ -284,25 +249,25 @@ Note
 <p>What is the percentage of customers using only one device?</p>
 <p>80.1%</p>
 </section>
-<section id="assingment-3" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Assingment 3</h1>
-<div class="cell" data-hash="01_probability_cache/html/unnamed-chunk-2_bd6c285bbc5c5c48ab623445ae80d596">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>P_A<span class="ot">&lt;-</span><span class="fl">0.04</span></span>
-<span id="cb11-2"><a href="#cb11-2"></a>P_nA<span class="ot">&lt;-</span><span class="dv">1</span><span class="sc">-</span>P_A</span>
-<span id="cb11-3"><a href="#cb11-3"></a>P_BA<span class="ot">&lt;-</span><span class="fl">0.97</span></span>
-<span id="cb11-4"><a href="#cb11-4"></a>P_BnA<span class="ot">&lt;-</span><span class="fl">0.01</span></span>
-<span id="cb11-5"><a href="#cb11-5"></a></span>
-<span id="cb11-6"><a href="#cb11-6"></a>P_B<span class="ot">&lt;-</span>P_BA<span class="sc">*</span>P_A<span class="sc">+</span>P_BnA<span class="sc">*</span>P_nA</span>
-<span id="cb11-7"><a href="#cb11-7"></a>P_AB<span class="ot">&lt;-</span>(P_BA<span class="sc">*</span>P_A)<span class="sc">/</span>P_B</span>
-<span id="cb11-8"><a href="#cb11-8"></a>P_nAB<span class="ot">&lt;-</span>(P_BnA<span class="sc">*</span>P_nA)<span class="sc">/</span>P_B</span>
-<span id="cb11-9"><a href="#cb11-9"></a></span>
-<span id="cb11-10"><a href="#cb11-10"></a><span class="fu">print</span>(P_AB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="assingment-3" class="level1">
+<h1>Assingment 3</h1>
+<div class="cell" data-hash="01_probability_cache/html/unnamed-chunk-2_35f15c65761b22e6255ed52dd80c6549">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>P_A<span class="ot">&lt;-</span><span class="fl">0.04</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>P_nA<span class="ot">&lt;-</span><span class="dv">1</span><span class="sc">-</span>P_A</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>P_BA<span class="ot">&lt;-</span><span class="fl">0.97</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>P_BnA<span class="ot">&lt;-</span><span class="fl">0.01</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>P_B<span class="ot">&lt;-</span>P_BA<span class="sc">*</span>P_A<span class="sc">+</span>P_BnA<span class="sc">*</span>P_nA</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>P_AB<span class="ot">&lt;-</span>(P_BA<span class="sc">*</span>P_A)<span class="sc">/</span>P_B</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>P_nAB<span class="ot">&lt;-</span>(P_BnA<span class="sc">*</span>P_nA)<span class="sc">/</span>P_B</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(P_AB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] 0.8016529</code></pre>
+<pre><code>[1] 0.8016529</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="fu">print</span>(P_nAB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(P_nAB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] 0.1983471</code></pre>
+<pre><code>[1] 0.1983471</code></pre>
 </div>
 </div>
 <p>These results show that in case the alarm is triggered, there is a possibility of about 20% that the product is flawless and a probability of 80% that the product is faulty.</p>
